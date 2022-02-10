@@ -1,0 +1,16 @@
+{
+  "entrypoint": "com.gufli.bricksidebar.app.BrickSidebar",
+  "name": "BrickSidebar",
+  "version": "1.0.0",
+  "dependencies": [
+    "BrickPlaceholders"
+  ],
+  "externalDependencies": {
+    "repositories": [
+      {"name": "Sponge", "url": "https://repo.spongepowered.org/maven"}
+    ],
+    "artifacts": [
+      "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
+    ]
+  }
+}

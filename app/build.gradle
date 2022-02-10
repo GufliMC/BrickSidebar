@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.gufli.bricksidebar.BrickSidebar'
+    }
+}
+
+dependencies {
+    implementation project(':api')
+
+    compileOnly 'com.github.Minestom:Minestom:-SNAPSHOT'
+    compileOnly 'com.gufli.brickplaceholders:api:1.0-SNAPSHOT'
+
+    implementation 'com.gufli.brickutils:scheduling:1.0-SNAPSHOT'
+
+    // external dependencies
+    compileOnly "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+shadowJar {
+    archiveClassifier.set("")
+    archiveBaseName.set("${rootProject.name}")
+    archiveVersion.set("${rootProject.version}")
+
+    doLast {
+        copy {
+            from "build/libs/" + archiveFileName.get()
+            into "../../server/extensions"
+        }
+    }
+}

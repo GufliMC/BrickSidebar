@@ -1,0 +1,13 @@
+{
+  "updateSpeed": "250",
+  "defaultSidebar": {
+    "title": "<yellow><bold>Hello there",
+    "lines": [
+      "",
+      "<white>Cool text here",
+      "",
+      "<rainbow>rainbows!</rainbow>",
+      ""
+    ]
+  }
+}
