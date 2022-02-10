@@ -12,7 +12,7 @@ jobs:
 
   build:
     needs: test
-    uses: MinestomBrick/.github/.github/workflows/java-gradle-build.yml@main
+    uses: MinestomBrick/.github/.github/workflows/java-gradle-build-artifact.yml@main
 
   publish:
     needs: test
