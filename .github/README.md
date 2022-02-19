@@ -36,15 +36,19 @@ Give a default sidebar to the players on join, uses [minimessage format](https:/
 
 ## API
 
+### Maven
 ```
 repositories {
     maven { url "https://repo.jorisg.com/snapshots" }
 }
 
 dependencies {
-    implementation 'com.gufli.bricksidebar:api:1.0-SNAPSHOT'
+    implementation 'org.minestombrick.sidebar:api:1.0-SNAPSHOT'
 }
 ```
+
+### Usage
+Check the [javadocs](https://minestombrick.github.io/BrickSidebar)
 
 The API works with layering, multiple extensions can push a sidebar, the latest one will be shown to the player. 
 The top sidebar can later be removed and the player will see the underlying sidebar.
@@ -52,19 +56,8 @@ The top sidebar can later be removed and the player will see the underlying side
 Sidebar sidebar = new Sidebar(Component.text("title"));
 sidebar.appendLines(Component.text("multi"), Component.text("line"), Component.text("text!"));
 
-SidebarAPI.push(player, sidebar);
-SidebarAPI.pop(player);
-SidebarAPI.remove(player, sidebar);
+SidebarAPI.get().push(player, sidebar);
+SidebarAPI.get().pop(player);
+SidebarAPI.get().remove(player, sidebar);
 ```
-
-Sidebars wil automatically evaluate placeholders in it's contents every x milliseconds (configurable).
-
-## Credits
-
-* The [Minestom](https://github.com/Minestom/Minestom) project
-* [MiniMessage](https://docs.adventure.kyori.net/minimessage#format)
-
-## Contributing
-
-Check our [contributing info](CONTRIBUTING.md)
 

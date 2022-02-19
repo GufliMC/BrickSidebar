@@ -1,4 +1,4 @@
-package com.gufli.bricksidebar.app;
+package org.minestombrick.sidebar.app;
 
 import java.util.List;
 

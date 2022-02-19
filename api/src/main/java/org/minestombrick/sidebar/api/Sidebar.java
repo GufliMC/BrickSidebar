@@ -1,4 +1,4 @@
-package com.gufli.bricksidebar.api;
+package org.minestombrick.sidebar.api;
 
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;

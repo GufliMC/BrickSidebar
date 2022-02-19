@@ -1,15 +1,13 @@
-package com.gufli.bricksidebar.app;
+package org.minestombrick.sidebar.app;
 
 import com.google.gson.Gson;
-import com.gufli.bricksidebar.api.Sidebar;
-import com.gufli.bricksidebar.api.SidebarAPI;
-import com.gufli.brickutils.scheduling.SchedulerAPI;
-import com.gufli.brickutils.scheduling.SimpleScheduler;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.player.PlayerDisconnectEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.extensions.Extension;
+import org.minestombrick.sidebar.api.Sidebar;
+import org.minestombrick.sidebar.api.SidebarAPI;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,10 +33,7 @@ public class BrickSidebar extends Extension {
             return;
         }
 
-        // init scheduler
-        SchedulerAPI.setScheduler(new SimpleScheduler("bricksidebar"));
-
-        // init sidebar maanger
+        // init sidebar manager
         SidebarAPI.registerManager(new BrickSidebarManager(config.updateSpeed));
 
         // default sidebar

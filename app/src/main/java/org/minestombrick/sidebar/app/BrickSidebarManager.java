@@ -1,12 +1,12 @@
-package com.gufli.bricksidebar.app;
+package org.minestombrick.sidebar.app;
 
-import com.gufli.brickplaceholders.api.PlaceholderAPI;
-import com.gufli.bricksidebar.api.Sidebar;
-import com.gufli.bricksidebar.api.SidebarManager;
-import com.gufli.brickutils.scheduling.SchedulerAPI;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.minestombrick.placeholders.api.PlaceholderAPI;
+import org.minestombrick.scheduler.api.SchedulerAPI;
+import org.minestombrick.sidebar.api.Sidebar;
+import org.minestombrick.sidebar.api.SidebarManager;
 
 import java.util.Deque;
 import java.util.Map;

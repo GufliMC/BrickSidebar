@@ -1,5 +1,5 @@
 {
-  "entrypoint": "com.gufli.bricksidebar.app.BrickSidebar",
+  "entrypoint": "org.minestombrick.sidebar.app.BrickSidebar",
   "name": "BrickSidebar",
   "version": "1.0.0",
   "dependencies": [

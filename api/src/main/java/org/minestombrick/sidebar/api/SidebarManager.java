@@ -1,4 +1,4 @@
-package com.gufli.bricksidebar.api;
+package org.minestombrick.sidebar.api;
 
 import net.minestom.server.entity.Player;
 import org.jetbrains.annotations.NotNull;

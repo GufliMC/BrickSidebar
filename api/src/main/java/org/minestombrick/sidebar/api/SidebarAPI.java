@@ -1,4 +1,4 @@
-package com.gufli.bricksidebar.api;
+package org.minestombrick.sidebar.api;
 
 public class SidebarAPI {
 
