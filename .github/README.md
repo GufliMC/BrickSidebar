@@ -4,8 +4,6 @@ A sidebar extension for [Minestom](https://github.com/Minestom/Minestom).
 
 ## Install
 
-## Install
-
 Get the [release](https://github.com/MinestomBrick/BrickNPCs/releases)
 and place it in the extension folder of your minestom server.
 
