@@ -3,7 +3,8 @@
   "name": "BrickSidebar",
   "version": "1.0.0",
   "dependencies": [
-    "BrickPlaceholders"
+    "BrickPlaceholders",
+    "BrickScheduler"
   ],
   "externalDependencies": {
     "repositories": [

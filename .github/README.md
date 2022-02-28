@@ -4,10 +4,14 @@ A sidebar extension for [Minestom](https://github.com/Minestom/Minestom).
 
 ## Install
 
-Get the latest jar file from [Github actions](https://github.com/MinestomBrick/BrickWorlds/actions) 
+## Install
+
+Get the [release](https://github.com/MinestomBrick/BrickNPCs/releases)
 and place it in the extension folder of your minestom server.
 
-Make sure to also install [BrickPlaceholders](https://github.com/MinestomBrick/BrickPlaceholders).
+### Dependencies
+* [BrickPlaceholders](https://github.com/MinestomBrick/BrickPlaceholders)
+* [BrickScheduler](https://github.com/MinestomBrick/BrickScheduler)
 
 ## Config
 
