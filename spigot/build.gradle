@@ -1,0 +1,40 @@
+plugins {
+    id 'net.minecrell.plugin-yml.bukkit' version '0.5.1'
+}
+
+repositories {
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url 'https://repo.dmulloy2.net/nexus/repository/public/' }
+}
+
+dependencies {
+    implementation project(':api')
+    implementation project(':common')
+    implementation project(':spigot-api')
+
+    compileOnly 'org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT'
+    compileOnly 'com.comphenix.protocol:ProtocolLib:4.7.0'
+    compileOnly 'com.guflimc.brick.placeholders:spigot-api:+'
+    compileOnly 'com.guflimc.brick.nametags:spigot-api:+'
+    compileOnly 'org.apache.commons:commons-lang3:+'
+
+    // shade
+    implementation 'net.kyori:adventure-api:4.10.1'
+    implementation 'net.kyori:adventure-text-minimessage:4.11.0-SNAPSHOT'
+    implementation 'net.kyori:adventure-text-serializer-gson:4.10.1'
+    implementation 'com.guflimc.brick.scheduler:spigot-api:+'
+}
+
+
+bukkit {
+    name = rootProject.name
+    main = 'com.guflimc.brick.sidebar.spigot.SpigotBrickSidebar'
+    description = 'Simple and lightweight sidebar library for mc 1.18+'
+    author = 'GufliMC'
+    website = 'https://github.com/GufliMC/BrickSidebar'
+    depend = ['BrickNametags']
+    softDepend = ['BrickPlaceholders']
+}
+
+// I want it nice like that
+generateBukkitPluginDescription.group = "minecraft"

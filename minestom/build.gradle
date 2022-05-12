@@ -1,0 +1,25 @@
+plugins {
+    id 'com.guflimc.minestom.extensionsetup' version '+'
+}
+
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation project(':api')
+    implementation project(':minestom-api')
+    implementation project(':common')
+
+    compileOnly 'com.github.Minestom:Minestom:-SNAPSHOT'
+    compileOnly 'com.guflimc.brick.placeholders:minestom-api:+'
+
+    library 'net.kyori:adventure-text-minimessage:4.11.0-SNAPSHOT'
+    library 'com.guflimc.brick.scheduler:minestom-api:+'
+}
+
+
+minestomExtension {
+    entrypoint = "com.guflimc.brick.sidebar.minestom.MinestomBrickSidebar"
+    dependencies = ["BrickPlaceholders"]
+}
