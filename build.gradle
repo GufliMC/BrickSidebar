@@ -3,7 +3,7 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.13.6'
 }
 
-group 'org.minestombrick.sidebar'
+group 'com.guflimc.brick.sidebar'
 version = scmVersion.version
 
 def javadocProjects = [project(':spigot-api'), project(':minestom-api'), project(':api')]
