@@ -7,15 +7,21 @@ repositories {
 }
 
 dependencies {
-    implementation project(':api')
-    implementation project(':minestom-api')
-    implementation project(':common')
-
+    // provided by platform
     compileOnly 'com.github.Minestom:Minestom:-SNAPSHOT'
+
+    // provided by extensions
     compileOnly 'com.guflimc.brick.placeholders:minestom-api:+'
 
-    library 'net.kyori:adventure-text-minimessage:4.11.0-SNAPSHOT'
+    // external library
+    library 'net.kyori:adventure-text-minimessage:4.+'
     library 'com.guflimc.brick.scheduler:minestom-api:+'
+
+    // shadow
+    implementation (project(':minestom-api')) {
+        exclude group: 'net.kyori' // provided by library
+    }
+    implementation project(':common')
 }
 
 
@@ -23,3 +29,6 @@ minestomExtension {
     entrypoint = "com.guflimc.brick.sidebar.minestom.MinestomBrickSidebar"
     dependencies = ["BrickPlaceholders"]
 }
+//
+//println project.configurations.runtimeClasspath.getResolvedConfiguration().getLenientConfiguration()
+//        .getArtifacts().stream().map(art -> art.moduleVersion.id).toList()

@@ -12,6 +12,9 @@ ext.set("javadocProjects", javadocProjects)
 def publishProjects = [project(':spigot-api'), project(':minestom-api')]
 ext.set("publishProjects", publishProjects)
 
+def shadowProjects = [project(':spigot'), project(':minestom')]
+ext.set("shadowProjects", shadowProjects)
+
 subprojects {
     apply plugin: 'java'
 
@@ -19,13 +22,9 @@ subprojects {
         maven { url 'https://repo.spongepowered.org/maven' }
         maven { url "https://repo.jorisg.com/snapshots" }
     }
-
-    dependencies {
-        compileOnly 'net.kyori:adventure-api:4.10.1'
-    }
 }
 
 apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-default.gradle'
 apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-javadoc.gradle'
 apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-shadow.gradle'
-apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-publish-shadow.gradle'
+apply from: 'https://guflimc.github.io/scripts/gradle/subprojects-publish.gradle'
