@@ -9,7 +9,7 @@ version = scmVersion.version
 def javadocProjects = [project(':spigot-api'), project(':minestom-api'), project(':api')]
 ext.set("javadocProjects", javadocProjects)
 
-def publishProjects = [project(':spigot-api'), project(':minestom-api')]
+def publishProjects = [project(':spigot-api'), project(':minestom-api'), project(':api')]
 ext.set("publishProjects", publishProjects)
 
 def shadowProjects = [project(':spigot'), project(':minestom')]

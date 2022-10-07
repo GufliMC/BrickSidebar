@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class PacketScoreboard extends AbstractScoreboard {
@@ -66,7 +67,7 @@ public class PacketScoreboard extends AbstractScoreboard {
             setScore(line, size - i);
         }
 
-        scoreCache.keySet().stream()
+        new HashSet<>(scoreCache.keySet()).stream()
                 .filter(key -> !lines.contains(key))
                 .forEach(this::removeScore);
 
@@ -168,6 +169,8 @@ public class PacketScoreboard extends AbstractScoreboard {
         for ( Player viewer : viewers ) {
             team.addViewer(viewer);
         }
+
+        sendScorePacket(team.members().iterator().next(), score, action);
     }
 
     private String name(int index) {

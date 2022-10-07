@@ -12,9 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class SpigotBrickSidebar extends JavaPlugin {
 
@@ -22,12 +20,10 @@ public class SpigotBrickSidebar extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Enabling " + nameAndVersion() + ".");
-
-        // load config
+        saveResource("config.json", false);
         BrickSidebarConfig config;
         try (
-                InputStream is = getResource("config.json");
+                InputStream is = new FileInputStream(new File(getDataFolder(), "config.json"));
                 InputStreamReader isr = new InputStreamReader(is)
         ) {
             config = gson.fromJson(isr, BrickSidebarConfig.class);
