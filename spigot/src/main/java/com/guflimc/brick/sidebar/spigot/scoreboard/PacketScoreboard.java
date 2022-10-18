@@ -147,7 +147,7 @@ public class PacketScoreboard extends AbstractScoreboard {
     private void sendInitialScorePackets(Player player) {
         teams.forEach((c, team) -> {
             team.addViewer(player);
-            sendScorePacket(team.members().iterator().next(), scoreCache.get(c), EnumWrappers.ScoreboardAction.CHANGE);
+            sendScorePacket(player, team.members().iterator().next(), scoreCache.get(c), EnumWrappers.ScoreboardAction.CHANGE);
         });
     }
 
