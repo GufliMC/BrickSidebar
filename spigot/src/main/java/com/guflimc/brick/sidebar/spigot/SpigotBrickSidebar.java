@@ -6,6 +6,7 @@ import com.guflimc.brick.sidebar.api.Sidebar;
 import com.guflimc.brick.sidebar.common.BrickSidebarConfig;
 import com.guflimc.brick.sidebar.spigot.api.SpigotSidebarAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -50,6 +51,8 @@ public class SpigotBrickSidebar extends JavaPlugin {
                     SpigotSidebarAPI.get().push(event.getPlayer(), sidebar);
                 }
             }, this);
+
+            Bukkit.getOnlinePlayers().forEach(p -> SpigotSidebarAPI.get().push(p, sidebar));
         }
 
         getServer().getPluginManager().registerEvents(new Listener() {

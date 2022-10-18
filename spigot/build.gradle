@@ -24,6 +24,7 @@ dependencies {
     implementation ('net.kyori:adventure-text-serializer-gson:4.+')  {
         exclude group: 'com.google.code.gson' // provided by platform
     }
+    implementation 'net.kyori:adventure-text-serializer-plain:4.+'
     implementation 'com.guflimc.brick.scheduler:spigot-api:+'
 }
 
@@ -34,8 +35,9 @@ bukkit {
     description = 'Simple and lightweight sidebar library for mc 1.18+'
     author = 'GufliMC'
     website = 'https://github.com/GufliMC/BrickSidebar'
-    depend = ['BrickNametags']
+    depend = ['BrickNametags', 'ProtocolLib']
     softDepend = ['BrickPlaceholders']
+    apiVersion = '1.18'
 }
 
 // I want it nice like that

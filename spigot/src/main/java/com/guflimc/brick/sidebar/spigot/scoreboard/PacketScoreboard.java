@@ -17,12 +17,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PacketScoreboard extends AbstractScoreboard {
 
     protected static final int SIDEBAR_SLOT = 1;
 
-    private final Map<Component, Integer> scoreCache = new HashMap<>();
+    private final Map<Component, Integer> scoreCache = new ConcurrentHashMap<>();
 
     public PacketScoreboard(Component title) {
         super(title);
@@ -61,14 +63,21 @@ public class PacketScoreboard extends AbstractScoreboard {
     //
 
     private void update() {
+        Set<Component> passed = new HashSet<>();
+
         int size = lines.size();
         for ( int i = 0; i < size; i++ ) {
             Component line = lines.get(i);
+            while ( passed.contains(line) ) {
+                line = line.append(Component.text(" "));
+            }
+
             setScore(line, size - i);
+            passed.add(line);
         }
 
-        new HashSet<>(scoreCache.keySet()).stream()
-                .filter(key -> !lines.contains(key))
+        scoreCache.keySet().stream()
+                .filter(key -> !passed.contains(key))
                 .forEach(this::removeScore);
 
     }
@@ -79,12 +88,12 @@ public class PacketScoreboard extends AbstractScoreboard {
             return;
         }
 
-        sendScorePacket(text, value, EnumWrappers.ScoreboardAction.CHANGE);
+        updateScorePacket(text, value, EnumWrappers.ScoreboardAction.CHANGE);
     }
 
     private void removeScore(Component text) {
         scoreCache.remove(text);
-        sendScorePacket(text, 0, EnumWrappers.ScoreboardAction.REMOVE);
+        updateScorePacket(text, 0, EnumWrappers.ScoreboardAction.REMOVE);
     }
 
 
@@ -101,6 +110,8 @@ public class PacketScoreboard extends AbstractScoreboard {
         packet.getStrings().write(0, objectiveId);
         packet.getIntegers().write(0, SIDEBAR_SLOT);
         sendPacket(player, packet);
+
+        sendInitialScorePackets(player);
     }
 
     protected void sendHidePacket(Player player) {
@@ -127,21 +138,20 @@ public class PacketScoreboard extends AbstractScoreboard {
         HEARTS
     }
 
-    private void sendScorePacket(String text, int score, EnumWrappers.ScoreboardAction action) {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.SCOREBOARD_SCORE);
-        packet.getStrings().write(0, text);
-        packet.getStrings().write(1, objectiveId);
-        packet.getIntegers().write(0, score);
-        packet.getScoreboardActions().write(0, action);
+    // SCORES
 
-        viewers.forEach(player -> sendPacket(player, packet));
-    }
-
-    private final static String UNIQUEID = "KDCPG";
+    private final static String UNIQUEID = "BRPS";
     private final Map<Component, FakeTeam> teams = new HashMap<>();
     private int counter = 0;
 
-    private void sendScorePacket(Component text, int score, EnumWrappers.ScoreboardAction action) {
+    private void sendInitialScorePackets(Player player) {
+        teams.forEach((c, team) -> {
+            team.addViewer(player);
+            sendScorePacket(team.members().iterator().next(), scoreCache.get(c), EnumWrappers.ScoreboardAction.CHANGE);
+        });
+    }
+
+    private void updateScorePacket(Component text, int score, EnumWrappers.ScoreboardAction action) {
         // remove line
         if ( action == EnumWrappers.ScoreboardAction.REMOVE ) {
             FakeTeam team = teams.remove(text);
@@ -181,6 +191,25 @@ public class PacketScoreboard extends AbstractScoreboard {
             index -= size;
         }
         return result.toString();
+    }
+
+    private PacketContainer scorePacket(String text, int score, EnumWrappers.ScoreboardAction action) {
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.SCOREBOARD_SCORE);
+        packet.getStrings().write(0, text);
+        packet.getStrings().write(1, objectiveId);
+        packet.getIntegers().write(0, score);
+        packet.getScoreboardActions().write(0, action);
+        return packet;
+    }
+
+    private void sendScorePacket(String text, int score, EnumWrappers.ScoreboardAction action) {
+        PacketContainer packet = scorePacket(text, score, action);
+        viewers.forEach(player -> sendPacket(player, packet));
+    }
+
+    private void sendScorePacket(Player player, String text, int score, EnumWrappers.ScoreboardAction action) {
+        PacketContainer packet = scorePacket(text, score, action);
+        sendPacket(player, packet);
     }
 
 }
