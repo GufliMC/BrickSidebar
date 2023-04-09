@@ -1,5 +1,6 @@
 package com.guflimc.brick.sidebar.minestom;
 
+import com.guflimc.brick.placeholders.api.resolver.PlaceholderResolveContext;
 import com.guflimc.brick.placeholders.minestom.api.MinestomPlaceholderAPI;
 import com.guflimc.brick.placeholders.minestom.api.MinestomPlaceholderManager;
 import com.guflimc.brick.scheduler.minestom.api.MinestomScheduler;
@@ -118,7 +119,8 @@ public class MinestomBrickSidebarManager implements MinestomSidebarManager {
         }
 
         for ( int i = 0; i < entry.template().lines().size(); i++ ) {
-            entry.sidebar.updateLineContent(i + "", MinestomPlaceholderAPI.get().replace(player, entry.template().lines().get(i)));
+            entry.sidebar.updateLineContent(i + "", MinestomPlaceholderAPI.get()
+                    .replace(entry.template().lines().get(i), PlaceholderResolveContext.of(player, player)));
         }
     }
 

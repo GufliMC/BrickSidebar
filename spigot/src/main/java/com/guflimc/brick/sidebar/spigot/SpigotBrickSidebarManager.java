@@ -1,10 +1,11 @@
 package com.guflimc.brick.sidebar.spigot;
 
+import com.guflimc.brick.placeholders.api.resolver.PlaceholderResolveContext;
 import com.guflimc.brick.placeholders.spigot.api.SpigotPlaceholderAPI;
 import com.guflimc.brick.scheduler.spigot.api.SpigotScheduler;
 import com.guflimc.brick.sidebar.api.Sidebar;
 import com.guflimc.brick.sidebar.spigot.api.SpigotSidebarManager;
-import com.guflimc.brick.sidebar.spigot.scoreboard.AbstractScoreboard;
+import com.guflimc.brick.sidebar.spigot.scoreboard.BaseScoreboard;
 import com.guflimc.brick.sidebar.spigot.scoreboard.PacketScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ public class SpigotBrickSidebarManager implements SpigotSidebarManager {
     public SpigotBrickSidebarManager(int updateSpeed, SpigotScheduler scheduler) {
         placeholdersEnabled = Bukkit.getPluginManager().isPluginEnabled("BrickPlaceholders");
 
-        if ( !placeholdersEnabled ) {
+        if (!placeholdersEnabled) {
             return;
         }
         scheduler.asyncRepeating(this::update, updateSpeed, TimeUnit.MILLISECONDS);
@@ -34,13 +35,13 @@ public class SpigotBrickSidebarManager implements SpigotSidebarManager {
 
     @Override
     public void push(@NotNull Player player, @NotNull Sidebar template) {
-        if ( !sidebars.containsKey(player) ) {
+        if (!sidebars.containsKey(player)) {
             sidebars.put(player, new ConcurrentLinkedDeque<>());
         }
 
-        AbstractScoreboard scoreboard = new PacketScoreboard(template.title());
+        BaseScoreboard scoreboard = new PacketScoreboard(template.title());
         int size = template.lines().size();
-        for ( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             scoreboard.addLine(template.lines().get(i));
         }
 
@@ -54,18 +55,18 @@ public class SpigotBrickSidebarManager implements SpigotSidebarManager {
 
     @Override
     public Optional<Sidebar> pop(@NotNull Player player) {
-        if ( !sidebars.containsKey(player) ) {
+        if (!sidebars.containsKey(player)) {
             return Optional.empty();
         }
 
         SidebarEntry entry = sidebars.get(player).poll();
-        if ( entry == null ) {
+        if (entry == null) {
             return Optional.empty();
         }
 
         entry.scoreboard.removeViewer(player);
 
-        if ( !sidebars.get(player).isEmpty() ) {
+        if (!sidebars.get(player).isEmpty()) {
             peekEntry(player).ifPresent(e -> {
                 update(player, e);
                 e.scoreboard.addViewer(player);
@@ -77,12 +78,12 @@ public class SpigotBrickSidebarManager implements SpigotSidebarManager {
 
     @Override
     public void remove(@NotNull Player player, @NotNull Sidebar sidebar) {
-        if ( !sidebars.containsKey(player) ) {
+        if (!sidebars.containsKey(player)) {
             return;
         }
 
         Optional<SidebarEntry> entry = peekEntry(player);
-        if ( entry.isPresent() && entry.get().template() == sidebar ) {
+        if (entry.isPresent() && entry.get().template() == sidebar) {
             pop(player);
             return;
         }
@@ -98,7 +99,7 @@ public class SpigotBrickSidebarManager implements SpigotSidebarManager {
 
     @Override
     public void removeAll(@NotNull Player player) {
-        if ( !sidebars.containsKey(player) ) {
+        if (!sidebars.containsKey(player)) {
             return;
         }
 
@@ -107,19 +108,20 @@ public class SpigotBrickSidebarManager implements SpigotSidebarManager {
     }
 
     private Optional<SidebarEntry> peekEntry(Player player) {
-        if ( !sidebars.containsKey(player) ) {
+        if (!sidebars.containsKey(player)) {
             return Optional.empty();
         }
         return Optional.ofNullable(sidebars.get(player).peek());
     }
 
     private void update(Player player, SidebarEntry entry) {
-        if ( !placeholdersEnabled ) {
+        if (!placeholdersEnabled) {
             return;
         }
 
-        for ( int i = 0; i < entry.template().lines().size(); i++ ) {
-            entry.scoreboard.setLine(i, SpigotPlaceholderAPI.get().replace(player, entry.template().lines().get(i)));
+        for (int i = 0; i < entry.template().lines().size(); i++) {
+            entry.scoreboard.setLine(i, SpigotPlaceholderAPI.get()
+                    .replace(entry.template().lines().get(i), PlaceholderResolveContext.of(player, player)));
         }
     }
 
@@ -131,7 +133,7 @@ public class SpigotBrickSidebarManager implements SpigotSidebarManager {
         sidebars.keySet().forEach(this::update);
     }
 
-    private record SidebarEntry(Sidebar template, AbstractScoreboard scoreboard) {
+    private record SidebarEntry(Sidebar template, BaseScoreboard scoreboard) {
     }
 
 }

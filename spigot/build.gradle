@@ -15,7 +15,6 @@ dependencies {
     // provided by plugins
     compileOnly 'com.comphenix.protocol:ProtocolLib:4.7.0'
     compileOnly 'com.guflimc.brick.placeholders:spigot-api:+'
-    compileOnly 'com.guflimc.brick.nametags:spigot-api:+'
 
     // shadow
     implementation project(':common')

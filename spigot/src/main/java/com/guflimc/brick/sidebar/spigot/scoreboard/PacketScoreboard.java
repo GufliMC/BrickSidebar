@@ -5,8 +5,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.guflimc.brick.nametags.spigot.api.FakeTeam;
-import com.guflimc.brick.nametags.spigot.api.SpigotNametagAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.apache.commons.lang.RandomStringUtils;
@@ -20,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PacketScoreboard extends AbstractScoreboard {
+public class PacketScoreboard extends BaseScoreboard {
 
     protected static final int SIDEBAR_SLOT = 1;
 
@@ -66,9 +64,9 @@ public class PacketScoreboard extends AbstractScoreboard {
         Set<Component> passed = new HashSet<>();
 
         int size = lines.size();
-        for ( int i = 0; i < size; i++ ) {
+        for (int i = 0; i < size; i++) {
             Component line = lines.get(i);
-            while ( passed.contains(line) ) {
+            while (passed.contains(line)) {
                 line = line.append(Component.text(" "));
             }
 
@@ -130,7 +128,8 @@ public class PacketScoreboard extends AbstractScoreboard {
     protected void sendPacket(Player player, PacketContainer packet) {
         try {
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-        } catch (InvocationTargetException ignore) {}
+        } catch (InvocationTargetException ignore) {
+        }
     }
 
     protected enum EnumScoreboardHealthDisplay {
@@ -140,57 +139,25 @@ public class PacketScoreboard extends AbstractScoreboard {
 
     // SCORES
 
-    private final static String UNIQUEID = "BRPS";
-    private final Map<Component, FakeTeam> teams = new HashMap<>();
+    private final static String UNIQUEID = "BRSB";
+    private final Map<Component, PacketTeam> teams = new HashMap<>();
     private int counter = 0;
 
     private void sendInitialScorePackets(Player player) {
         teams.forEach((c, team) -> {
-            team.addViewer(player);
-            sendScorePacket(player, team.members().iterator().next(), scoreCache.get(c), EnumWrappers.ScoreboardAction.CHANGE);
+            team.show(player);
+            sendScorePacket(player, team.member(), scoreCache.get(c), EnumWrappers.ScoreboardAction.CHANGE);
         });
     }
 
-    private void updateScorePacket(Component text, int score, EnumWrappers.ScoreboardAction action) {
-        // remove line
-        if ( action == EnumWrappers.ScoreboardAction.REMOVE ) {
-            FakeTeam team = teams.remove(text);
-            if ( team == null ) return;
-
-            sendScorePacket(team.members().iterator().next(), score, action);
-            team.removeAllViewers();
-            return;
-        }
-
-        // get team
-        FakeTeam team = teams.get(text);
-        if ( team != null ) {
-            // team already exists
-            sendScorePacket(team.members().iterator().next(), score, action);
-            return;
-        }
-
-        // create team
-        String id = UNIQUEID + RandomStringUtils.randomAlphanumeric(5) + score;
-        team = SpigotNametagAPI.get().createFakeTeam(id, text, Component.text(""));
-        teams.put(text, team);
-
-        team.addMember(name(++counter));
-        for ( Player viewer : viewers ) {
-            team.addViewer(viewer);
-        }
-
-        sendScorePacket(team.members().iterator().next(), score, action);
+    private void sendScorePacket(String text, int score, EnumWrappers.ScoreboardAction action) {
+        PacketContainer packet = scorePacket(text, score, action);
+        viewers.forEach(player -> sendPacket(player, packet));
     }
 
-    private String name(int index) {
-        int size = ChatColor.values().length;
-        StringBuilder result = new StringBuilder();
-        while ( index >= 0 ) {
-            result.append(ChatColor.values()[index % size]);
-            index -= size;
-        }
-        return result.toString();
+    private void sendScorePacket(Player player, String text, int score, EnumWrappers.ScoreboardAction action) {
+        PacketContainer packet = scorePacket(text, score, action);
+        sendPacket(player, packet);
     }
 
     private PacketContainer scorePacket(String text, int score, EnumWrappers.ScoreboardAction action) {
@@ -202,14 +169,44 @@ public class PacketScoreboard extends AbstractScoreboard {
         return packet;
     }
 
-    private void sendScorePacket(String text, int score, EnumWrappers.ScoreboardAction action) {
-        PacketContainer packet = scorePacket(text, score, action);
-        viewers.forEach(player -> sendPacket(player, packet));
+    //
+
+    private void updateScorePacket(Component text, int score, EnumWrappers.ScoreboardAction action) {
+        // remove line
+        if (action == EnumWrappers.ScoreboardAction.REMOVE) {
+            PacketTeam team = teams.remove(text);
+            if (team == null) return;
+
+            sendScorePacket(team.member(), score, action);
+            viewers.forEach(team::hide);
+            return;
+        }
+
+        // get team
+        PacketTeam team = teams.get(text);
+        if (team != null) {
+            // team already exists
+            sendScorePacket(team.member(), score, action);
+            return;
+        }
+
+        // create team
+        String id = UNIQUEID + RandomStringUtils.randomAlphanumeric(5) + score;
+        team = new PacketTeam(id, text, name(++counter));
+        teams.put(text, team);
+
+        viewers.forEach(team::show);
+        sendScorePacket(team.member(), score, action);
     }
 
-    private void sendScorePacket(Player player, String text, int score, EnumWrappers.ScoreboardAction action) {
-        PacketContainer packet = scorePacket(text, score, action);
-        sendPacket(player, packet);
+    private String name(int index) {
+        int size = ChatColor.values().length;
+        StringBuilder result = new StringBuilder();
+        while (index >= 0) {
+            result.append(ChatColor.values()[index % size]);
+            index -= size;
+        }
+        return result.toString();
     }
 
 }

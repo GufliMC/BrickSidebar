@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public abstract class AbstractScoreboard {
+public abstract class BaseScoreboard {
 
     protected final String objectiveId;
 
@@ -14,7 +14,7 @@ public abstract class AbstractScoreboard {
     protected final Set<Player> viewers = new HashSet<>();
     protected final List<Component> lines = new ArrayList<>();
 
-    public AbstractScoreboard(Component title) {
+    public BaseScoreboard(Component title) {
         this.objectiveId = RandomStringUtils.randomAlphabetic(15);
         this.title = title;
     }
